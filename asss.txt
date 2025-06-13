@@ -1,0 +1,15 @@
+stashes are saved  locally and we do it to mvoe to prev branch if a response of a PR review is raised 
+stash
+fisf
+when we have multiple stashes git stash apply is used to fetch latest stash 
+
+S0   S1 S2 S3
+new 
+
+git stash apply stash@{1}   to fetch 1th index stash 
+
+git stash pop
+
+git stash drop stash@{1}
+
+git stash clear   to clear all stashes
