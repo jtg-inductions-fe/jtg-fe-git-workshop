@@ -64,12 +64,12 @@ Before we dive into version control, let's make sure Git is installed and config
 First thing to do is to setup your identity. This identifies you to
 other people who download the project.
 
-    $ git config --global user.name "Your Name"
-    $ git config --global user.email your.email@example.com
+    git config --global user.name "Your Name"
+    git config --global user.email your.email@example.com
 
 Verify your config using:
 
-    $ git config --list
+    git config --list
 
 
 <br /><br />
@@ -317,87 +317,8 @@ recent. You would see various information like the name of the author,
 the date it was commited, a commit SHA number, and the message for the
 commit.
 
-You should also see your most recent commit, where you added the two new
-files in the previous section. However git log does not show the files
-involved in each commit. To view more information about a commit, use:
-
-    git show
-
-You should see something similar to:
-
-    commit 5a1fad96c8584b2c194c229de7e112e4c84e5089
-    Author: arpit-agarwal24 
-    Date:   Fri Jun 13 08:13:42 2025 +1200
-
-        I am adding two new files
-
-    diff --git a/alice.txt b/alice.txt
-    new file mode 100644
-    index 0000000..e69de29
-    diff --git a/bob.txt b/bob.txt
-    new file mode 100644
-    index 0000000..e69de29
-
 <br />
 
-### Undoing Changes
-
-In this section, we are going to add more changes, and try to recover
-from mistakes.
-
-Be forewarned, this next step is going to be hard. We will need to add
-some content to alice.txt.
-
-Open `alice.txt` and type in:
-
-Lorem ipsum Sed ut perspiciatis, unde omnis iste natus error sit
-voluptatem accusantium doloremque laudantium
-
-Then **save** the file
-
-What did we change? A very useful command is `git diff`. This is very
-useful to see exactly what changes you have done.
-
-    git diff
-
-You should see something like the following:
-
-    diff --git a/alice.txt b/alice.txt
-    index e69de29..2aedcab 100644
-    --- a/alice.txt
-    +++ b/alice.txt
-    @@ -0,0 +1 @@
-    +Lorem ipsum Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium
-
-
-
-Now let’s add our modified file, `alice.txt` to the staging area. Do you
-remember how ?
-
-Next, check the `status` of `alice.txt`. Is it in the staging area now?
-
-
-
-Let’s say we did not like putting Lorem ipsum into `alice.txt`. One
-advantage of a staging area is to enable us to back out before we
-commit - which is a bit harder to back out of. It’s easier to take mail out of the cardboard box before you seal it than after.
-
-Here’s how to back out of the staging area :
-
-    $ git reset HEAD alice.txt
-
-    Unstaged changes after reset:
-    M   alice.txt
-
-Compare the `git status` now to the git status from the previous
-section. How does it differ?
-
-Your staging area should now be empty. What’s happened to the Lorem
-Ipsum changes? It’s still there. We are now back to the state just
-before we added this file to staging area. Going back to the mail
-analogy, we just took our letter out of the box.
-
-<br />
 
 ### Stash
 
@@ -549,7 +470,7 @@ Git is pretty good at merging/pulling/rebasing automatically, even when the same
 We now practice fixing merge conflicts. Recall that conflicts are caused
 by merges which affect the same block of code.
 
-Here’s a branch I prepared earlier. The branch is called `June-2025`. I will push some code into it with same alice.txt file. This create conflicts in your PRs as you were working on the same file and content was different.
+Here’s a branch I prepared earlier. The branch is called `JUNE-2025`. I will push some code into it with same alice.txt file. This create conflicts in your PRs as you were working on the same file and content was different.
 
 #### Fixing a conflict
 
@@ -566,35 +487,177 @@ If you open the `alice.txt` file, you will see something similar as
 below:
 
     <<<<<<< HEAD
-    It was eventually recognized that most of the heavy elements observed in the present universe are the result of stellar nucleosynthesis (http://en.wikipedia.org/wiki/Stellar_nucleosynthesis) in stars, a theory largely developed by Bethe.
+    Some text entered by you
     =======
 
-    http://en.wikipedia.org/wiki/Stellar_nucleosynthesis
-    Stellar nucleosynthesis is the collective term for the nuclear reactions taking place in stars to build the nuclei of the elements heavier than hydrogen. Some small quantity of these reactions also occur on the stellar surface under various circumstances. For the creation of elements during the explosion of a star, the term supernova nucleosynthesis is used.
-    >>>>>>> alpher
+    Some text entered by Me
+    >>>>>>> JUNE-2025
 
 Git uses pretty much standard conflict resolution markers. The top part
 of the block, which is everything between `<<<<<< HEAD` and `======` is
 what was in your current branch.\
-The bottom half is the version that is present from the `alpher` branch.
+The bottom half is the version that is present from the `JUNE-2025` branch.
 To resolve the conflict, you either choose one side or merge them as you
 see fit.
 
-For example, I might decide to choose the version from the `alpher`
+For example, I might decide to choose the version from the `JUNE-2025`
 branch.
 
 Now, try to **fix the merge conflict**. Pick the text that you think is
-better (Ask for help if stumped)
+better.
 
 Once I have done that, I can then mark the conflict as fixed by using
-`git add` and `git commit`.
-
-    $ git add gamow.txt
-    $ git commit -m "Fixed conflict"
+`git add` and `git commit`
 
 Congratulations. You have fixed the conflict. All is good in the world.
 
+<br />
+
+### Rebase
+
+Rebase is used to move or combine a sequence of commits from one branch onto another.
+It gives your project history a linear and cleaner structure by avoiding unnecessary merge commits.
+
+| Action       | Result             | Commit History                           |
+| ------------ | ------------------ | ---------------------------------------- |
+| `git merge`  | Combines branches  | Keeps all commits, creates merge commits |
+| `git rebase` | Moves your commits | Linear history, no merge commits         |
+
+
+When to Use Rebase
+1. Before pushing a feature branch: rebase it on the latest main to integrate changes cleanly.
+
+2. To squash or tidy up your commit history before merging.
+
+3. When you want to avoid merge commits and keep commit history readable.
+
+
+Steps to rebase:
+1. Checkout your branch
+
+2. Add command:
+   ```bash
+   git rebase JUNE-2025
+
+3. If there are conflicts, Git will pause and ask you to fix them.
+Fix the files. Then:
+   ```
+   git add .
+   git rebase --continue
+
+4. If needed, you can abort the rebase at any time:
+   ```bash
+   git rebase --abort
+
+If done correctly, you'll be successfully able to rebase your branch.
+
+<br />
+
+### Interactive Rebase
+
+Use to edit, squash, or reword commits.
+
+```bash
+git rebase -i HEAD~3
+```
+
+
+This will open an interactive editor:
+```bash
+pick abc123 First commit
+pick def456 Add login form
+pick ghi789 Fix styles
+```
+
+You can change pick to:
+1. reword: Edit commit message
+2. edit: Edit the commit itself
+3. squash: Combine into previous commit
+4. drop: Get rid of the commit
+
+<br />
+
+### Undoing Changes
+
+In this section, we are going to add more changes, and try to recover
+from mistakes.
+
+Open `alice.txt` and type in:
+
+Lorem ipsum Sed ut perspiciatis, unde omnis iste natus error sit
+voluptatem accusantium doloremque laudantium
+
+Then **save** the file
+
+What did we change? A very useful command is `git diff`. This is very
+useful to see exactly what changes you have done.
+
+    git diff
+
+You should see something like the following:
+
+    diff --git a/alice.txt b/alice.txt
+    index e69de29..2aedcab 100644
+    --- a/alice.txt
+    +++ b/alice.txt
+    @@ -0,0 +1 @@
+    +Lorem ipsum Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium
 
 
 
+Now let’s add our modified file, `alice.txt` to the staging area. Do you
+remember how ?
 
+Next, check the `status` of `alice.txt`. Is it in the staging area now?
+
+
+
+git reset is used to undo changes in your Git history. You can:
+
+1. Unstage files
+
+2. Move the HEAD pointer to a previous commit
+
+3. Completely erase commits from history (careful!)
+
+Depending on the mode used (--soft, --mixed, or --hard), it affects your staging area, working directory, and commit history differently.
+
+
+| Mode      | Affects Staging? | Affects Files? | Use Case                                             |
+| --------- | ---------------- | -------------- | ---------------------------------------------------- |
+| `--soft`  | ✅ Yes            | ❌ No           | Undo commit but keep staged changes                  |
+| `--mixed` | ✅ Yes (default)  | ❌ No           | Unstage changes but keep in working dir              |
+| `--hard`  | ✅ Yes            | ✅ Yes          | **Dangerous**: Undo everything, delete local changes |
+
+#### Reset file from stage
+
+Let’s say we did not like putting Lorem ipsum into `alice.txt`. One
+advantage of a staging area is to enable us to back out before we
+commit - which is a bit harder to back out of. It’s easier to take mail out of the cardboard box before you seal it than after.
+
+Here’s how to back out of the staging area :
+
+    git reset HEAD alice.txt
+
+    Unstaged changes after reset:
+    M   alice.txt
+
+Compare the `git status` now to the git status from the previous
+section. How does it differ?
+
+Your staging area should now be empty. What’s happened to the Lorem
+Ipsum changes? It’s still there. We are now back to the state just
+before we added this file to staging area. Going back to the mail
+analogy, we just took our letter out of the box.
+
+
+#### Reset the Last Commit (but keep changes staged)
+
+```bash
+git reset --soft HEAD~1
+```
+
+
+<br />
+
+Thanks! If you have doubt after the session or stuck somewhere sync with your mentors.
