@@ -171,7 +171,7 @@ SSH (Secure Shell) is a secure cryptographic protocol used to **authenticate and
 
 First, clone this repository:
 
-    git clone https://github.com/kuahyeow/git-workshop.git
+    git clone https://github.com/jtg-inductions-fe/git-workshop
 
 You may want to fork (create your own copy of) the project on github and
 clone from your own repo. You can find the fork button at the top right of
